@@ -1,39 +1,27 @@
 .chat-main
   .chat-main__group-info
     .chat-main__group-info__left-box
-      %p.chat-main__group-info__left-box__current-group
-        test
+      .chat-main__group-info__left-box__current-group
+        = @group.name
       %ul.chat-main__group-info__left-box__current-member
         %li.chat-main__group-info__left-box__current-member__list
           Member：
         %li.chat-main__group-info__left-box__current-member__list
-          kirihara
-    = link_to "#" do
+          - @group.users.each do |user|
+            = user.name
+
+    = link_to edit_group_path(@group) do
       .chat-main__group-info__edit-btn
         Edit
 
   .chat-main__message-list
-    .chat-main__message-list__message
-      .chat-main__message-list__message__address
-        %p.chat-main__message-list__message__address__name
-          kirihara
-        %p.chat-main__message-list__message__address__date
-          2020/4/24(Fri) 17:00:00
-      %p.chat-main__message-list__message__body
-        こんにちは
-    .chat-main__message-list__message
-      .chat-main__message-list__message__address
-        %p.chat-main__message-list__message__address__name
-          kirihara
-        %p.chat-main__message-list__message__address__date
-          2020/4/24(Fri) 18:00:00
-      %p.chat-main__message-list__message__body
-        さようなら
+    = render @messages
 
   .chat-main__message-form
-    .chat-main__message-form__new-message
-      %input{type: "text", placeholder: "type a message", class: "input-text"}
-      %label{class: "input-image"}
-        = icon('far', 'image', class: "image-icon")
-        %input{type: "file", class: "input-file"}
-    %input{type: "submit", value: "Send", class: "input-send"}
+    = form_for [@group, @message] do |f|
+      .chat-main__message-form__new-message
+        = f.text_field :content, class: 'input-text', placeholder: 'type a message'
+        = f.label :image, class: 'input-image' do
+          = icon('far', 'image', class: "image-icon")
+          = f.file_field :image, class: 'input-file'
+      = f.submit 'Send', class: 'input-send'
